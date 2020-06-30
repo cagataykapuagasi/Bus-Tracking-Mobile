@@ -1,23 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { images, fonts, colors } from 'res';
+import { images, fonts, colors, width, height } from 'res';
 import { ScaledSheet } from 'react-native-size-matters';
-import MapView from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
+import { getLocation } from '~/utils/location';
+import { Bus } from '~/api';
 
-export default class Home extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>My Starter Kit</Text>
-      </View>
-    );
-  }
-}
+const latitudeDelta = 0.002;
+
+const Home = () => {
+  const region = {
+    latitude: 39.1667,
+    longitude: 35.6667,
+    latitudeDelta: 18,
+    longitudeDelta: 18,
+  };
+
+  useEffect(() => {
+    Bus.getBuses()
+      .then(data => console.warn(data))
+      .catch(e => console.log(e));
+    //getLocation().then(region => this.setState({ region }));
+  }, []);
+
+  return (
+    <MapView style={styles.map} initialRegion={region}>
+      <Marker coordinate={region} />
+    </MapView>
+  );
+};
+
+export default Home;
 
 const styles = ScaledSheet.create({
-  container: {
+  map: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });

@@ -3,6 +3,8 @@
  * prevent some break in hot reload
  * and optimize the number of file imported
  */
+import { Dimensions } from 'react-native';
+const { width, height } = Dimensions.get('window');
 
 module.exports = {
   get images() {
@@ -16,5 +18,11 @@ module.exports = {
   },
   get languages() {
     return require('./languages').default;
+  },
+  get width() {
+    return width;
+  },
+  get height() {
+    return height;
   },
 };
