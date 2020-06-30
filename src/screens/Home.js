@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { images, fonts, colors, width, height } from 'res';
 import { ScaledSheet } from 'react-native-size-matters';
 import MapView, { Marker } from 'react-native-maps';
 import { getLocation } from '~/utils/location';
 import { Bus } from '~/api';
+import Card from '~/components/Card';
 
 const latitudeDelta = 0.002;
 
 const Home = () => {
+  const [buses, setBuses] = useState([]);
+  const [selectedBus, setSelectedBus] = useState(null);
+
   const region = {
     latitude: 39.1667,
     longitude: 35.6667,
@@ -16,24 +20,45 @@ const Home = () => {
     longitudeDelta: 18,
   };
 
+  const clearSelectedBus = () => {
+    setSelectedBus(null);
+  };
+
   useEffect(() => {
-    Bus.getBuses()
-      .then(data => console.warn(data))
-      .catch(e => console.log(e));
-    //getLocation().then(region => this.setState({ region }));
+    Bus.getBuses().then(({ data }) => setBuses(data));
   }, []);
 
   return (
-    <MapView style={styles.map} initialRegion={region}>
-      <Marker coordinate={region} />
-    </MapView>
+    <View style={styles.container}>
+      <MapView
+        onTouchStart={clearSelectedBus}
+        style={styles.map}
+        initialRegion={region}>
+        {buses &&
+          buses.map(data => (
+            <Marker
+              onPress={e => {
+                e.stopPropagation();
+                setSelectedBus(data);
+              }}
+              key={data.id}
+              coordinate={data.location}
+            />
+          ))}
+      </MapView>
+      <Card clearSelectedBus={clearSelectedBus} item={selectedBus} />
+    </View>
   );
 };
 
 export default Home;
 
 const styles = ScaledSheet.create({
-  map: {
+  container: {
     flex: 1,
+    justifyContent: 'flex-end',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
   },
 });
