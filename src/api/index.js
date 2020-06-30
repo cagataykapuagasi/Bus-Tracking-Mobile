@@ -1,5 +1,3 @@
-import * as Auth from './Auth';
+import * as Bus from './Bus';
 
-export default {
-  Auth,
-};
+export { Bus };

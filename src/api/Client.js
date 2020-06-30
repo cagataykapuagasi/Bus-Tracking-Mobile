@@ -1,10 +1,9 @@
 import { create } from 'apisauce';
-import { mapWithKeys } from '~/utils';
 
 let token = null;
 
 const client = create({
-  baseURL: 'https://null',
+  baseURL: 'https://bus-track.herokuapp.com/api/',
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -30,17 +29,8 @@ export function request(method, path, params = {}, customHeaders = {}) {
     if (response.ok) {
       return Promise.resolve(response.data);
     } else {
-      const { violations, message, title, ...others } = response.data;
-      if (violations) {
-        return Promise.reject({
-          error: message || title,
-          errors: mapWithKeys(violations, violation => {
-            return [violation.propertyPath, violation.message];
-          }),
-          ...others,
-          status: response.status,
-        });
-      }
+      const { message, title, ...others } = response.data;
+
       return Promise.reject({
         error: message,
         errors: [],
