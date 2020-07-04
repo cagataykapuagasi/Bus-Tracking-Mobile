@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { images, fonts, colors, width, height } from 'res';
+import { View, StyleSheet } from 'react-native';
 import { ScaledSheet } from 'react-native-size-matters';
 import MapView, { Marker } from 'react-native-maps';
-import { getLocation } from '~/utils/location';
 import { Bus } from '~/api';
 import Card from '~/components/Card';
-
-const latitudeDelta = 0.002;
 
 const Home = () => {
   const [buses, setBuses] = useState([]);
